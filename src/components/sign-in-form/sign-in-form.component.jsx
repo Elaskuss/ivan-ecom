@@ -21,7 +21,7 @@ const SignInForm = () => {
 
    const handleSubmit = async (event) => {
       event.preventDefault();
-      const {user} = await signInUserWithEmailAndPassword(email, password);
+      await signInUserWithEmailAndPassword(email, password);
    }
 
    const signInViaGoogle = async () => {
