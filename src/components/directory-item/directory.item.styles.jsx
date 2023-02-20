@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const DirectoryContainer = styled.div`
    min-width: 30%;
-   height: 240px;
+   height: 40vh;
    flex: 1 1 auto;
    display: flex;
    align-items: center;
