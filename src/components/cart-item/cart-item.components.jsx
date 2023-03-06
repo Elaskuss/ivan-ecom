@@ -1,22 +1,25 @@
-import { useContext } from "react";
-import { CartContext } from "../../context/cart.context";
+
 import { CartItemContainer, ItemControlsContainer, ItemDetails, RemoveButton } from "./cart-item.styles";
 import "./cart-item.styles";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCartItems } from "../../store/cart/cart.selector";
+import { addItemToCart, decreaseItemFromCart, removeItemFromCart } from "../../store/cart/cart.action";
 
 const CartItem = ({ cartItem }) => {
+   const cartItems = useSelector(selectCartItems);
+   const dispatch = useDispatch();
    const { name, quantity, imageUrl, price } = cartItem;
-   const { addItemToCart, decreaseItemFromCart, removeItemFromCart } = useContext(CartContext);
 
    const decrease = () => {
-      decreaseItemFromCart(cartItem);
+      dispatch(decreaseItemFromCart(cartItems, cartItem));
    };
 
    const increase = () => {
-      addItemToCart(cartItem);
+      dispatch(addItemToCart(cartItems, cartItem));
    };
 
    const remove = () => {
-      removeItemFromCart(cartItem);
+      dispatch(removeItemFromCart(cartItems, cartItem));
    };
 
    return (
@@ -25,7 +28,7 @@ const CartItem = ({ cartItem }) => {
          <ItemDetails>
             <span className="name">{name}</span>
             <span className="price">
-               {quantity} x {price}$
+               {quantity} x {price}kr
             </span>
          </ItemDetails>
          <ItemControlsContainer>
