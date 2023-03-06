@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { CartContext } from "../../context/cart.context";
 import {
    CheckoutItemContainer,
    ImageContainer,
@@ -7,23 +5,25 @@ import {
    RemoveButton,
 } from "./checkout.item.styles";
 import "./checkout.item.styles";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCartItems } from "../../store/cart/cart.selector";
+import { addItemToCart, decreaseItemFromCart, removeItemFromCart } from "../../store/cart/cart.action";
 
 const CheckoutItem = ({ checkoutItem }) => {
-   const { addItemToCart, decreaseItemFromCart, removeItemFromCart } =
-      useContext(CartContext);
-
    const { name, quantity, price, imageUrl } = checkoutItem;
+   const dispatch = useDispatch();
+   const cartItems = useSelector(selectCartItems);
 
    const decrease = () => {
-      decreaseItemFromCart(checkoutItem);
+      dispatch(decreaseItemFromCart(cartItems, checkoutItem));
    };
 
    const increase = () => {
-      addItemToCart(checkoutItem);
+      dispatch(addItemToCart(cartItems, checkoutItem));
    };
 
    const remove = () => {
-      removeItemFromCart(checkoutItem);
+      dispatch(removeItemFromCart(cartItems, checkoutItem));
    };
 
    return (
@@ -42,7 +42,7 @@ const CheckoutItem = ({ checkoutItem }) => {
                &#10095;
             </div>
          </Quantity>
-         <span className="price">{price}</span>
+         <span className="price">{price},00 kr</span>
          <RemoveButton onClick={remove}>&#10005;</RemoveButton>
       </CheckoutItemContainer>
    );
