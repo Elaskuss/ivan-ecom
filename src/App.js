@@ -5,30 +5,16 @@ import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import { useEffect } from "react";
-import {
-   createUserDocFromAuth,
-   onAuthStateChangedListener,
-} from "./utils/firebase/firebase.utils";
-import { setCurrentUser } from "./store/user/user.action";
+import { checkUserSession } from "./store/user/user.action";
 import { useDispatch } from "react-redux";
 
 function App() {
    const dispatch = useDispatch();
 
    useEffect(() => {
-      const unsubscribe = onAuthStateChangedListener((user) => {
-         if (user) {
-            createUserDocFromAuth(user);
-         }
+      dispatch(checkUserSession());
+   }, [dispatch]);
 
-         dispatch(setCurrentUser(user));
-      });
-
-      return unsubscribe;
-      /* eslint-disable */
-      //Dispatch is not a dependency
-   }, []);
-      /* eslint-enable */
    return (
       <Routes>
          <Route path="/" element={<Nav />}>

@@ -9,6 +9,10 @@ export const selectCategories = createSelector(
    }
 );
 
+export const selectIsCategoriesLoading = createSelector([selectCategoryReducer], (categoriesSlice) => {
+   return categoriesSlice.isLoading;
+});
+
 export const selectCategoriesMap = createSelector(
    [selectCategories],
    (categories) => {
@@ -20,3 +24,4 @@ export const selectCategoriesMap = createSelector(
       return categoryMap;
    }
 );
+

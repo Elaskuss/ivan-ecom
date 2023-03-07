@@ -8,7 +8,16 @@ import {
    signOut,
    onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from "firebase/firestore";
+import {
+   getFirestore,
+   doc,
+   getDoc,
+   setDoc,
+   collection,
+   writeBatch,
+   query,
+   getDocs,
+} from "firebase/firestore";
 
 const firebaseConfig = {
    apiKey: "AIzaSyDJgDmALPgxUrv7zgmevCpJy52dHoqEtRI",
@@ -33,8 +42,11 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
-   const collectionRef = collection(db, collectionKey); 
+export const addCollectionAndDocuments = async (
+   collectionKey,
+   objectsToAdd
+) => {
+   const collectionRef = collection(db, collectionKey);
    const batch = writeBatch(db);
 
    objectsToAdd.forEach((object) => {
@@ -43,16 +55,18 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
    });
 
    await batch.commit();
-}
+};
 
 export const getCategoriesAndDocuments = async () => {
    const collectionRef = collection(db, "categories");
    const q = query(collectionRef);
 
    const quarySnapshot = await getDocs(q);
-   const categoriesArray = quarySnapshot.docs.map(docSnapshot => docSnapshot.data());
+   const categoriesArray = quarySnapshot.docs.map((docSnapshot) =>
+      docSnapshot.data()
+   );
    return categoriesArray;
-}
+};
 
 export const createUserDocFromAuth = async (
    userAuth,
@@ -78,13 +92,13 @@ export const createUserDocFromAuth = async (
       }
    }
 
-   return userDocRef;
+   return userSnapshot;
 };
 
 export const createAuthUser = async (email, password) => {
    if (!email || !password) return;
-
-   return await createUserWithEmailAndPassword(auth, email, password);
+   const userAuth = await createUserWithEmailAndPassword(auth, email, password);
+   return userAuth;
 };
 
 export const signInUserWithEmailAndPassword = async (email, password) => {
@@ -96,6 +110,19 @@ export const signInUserWithEmailAndPassword = async (email, password) => {
 export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) => {
-   if(callback == null) return;
+   if (callback == null) return;
    onAuthStateChanged(auth, callback);
-}
+};
+
+export const getCurrentUser = () => {
+   return new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(
+         auth,
+         (userAuth) => {
+            unsubscribe();
+            resolve(userAuth);
+         },
+         reject
+      );
+   });
+};
