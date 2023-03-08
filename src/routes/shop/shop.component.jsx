@@ -11,7 +11,6 @@ const Shop = () => {
    const dispatch = useDispatch();
    
    useEffect(() => {
-      console.log(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
       const getCategoriesMap = async () => {
          const categoriesArray = await getCategoriesAndDocuments();
          dispatch(setCategoriesMap(categoriesArray));

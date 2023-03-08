@@ -14,7 +14,7 @@ export const FormContainer = styled.form`
    min-width: 500px;
 `
 
-export const CheckoutButton = styled(Button)`
-   min-width: 250px;
+export const PaymentButton = styled(Button)`
+   width: 300px;
    align-self: center;
 `

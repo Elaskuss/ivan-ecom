@@ -4,61 +4,76 @@ import { useSelector } from "react-redux";
 import { selectCartTotal } from "../../store/cart/cart.selector";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { CheckoutButton, FormContainer, PaymentformContainer } from "./payment-form.styles";
+import {
+   PaymentButton,
+   FormContainer,
+   PaymentformContainer,
+} from "./payment-form.styles.jsx";
 
 const Paymentform = () => {
    const stripe = useStripe();
    const elements = useElements();
-   
+
    const amount = useSelector(selectCartTotal) * 100;
    const currentUser = useSelector(selectCurrentUser);
-   const [isProcessingPayment, setIsProcessingPayment] = useState(false); 
+   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
    const paymentHandler = async (e) => {
-     
       e.preventDefault();
-      
-      if(!stripe || !elements)
-         return;
-      
+
+      if (!stripe || !elements) return;
+
       setIsProcessingPayment(true);
 
-      const response = await fetch("/.netlify/functions/create-paymeny-intent", {
-         method: "post",
-         headers: {
-            "Content-Type": "application/json"
-         },
-         body: JSON.stringify({amount: amount})
-      }).then(res => res.json());
+      const response = await fetch(
+         "/.netlify/functions/create-paymeny-intent",
+         {
+            method: "post",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ amount: amount }),
+         }
+      ).then((res) => res.json());
 
-      const {paymentIntent: {client_secret}} = response;
+      const {
+         paymentIntent: { client_secret },
+      } = response;
 
       const paymentResult = await stripe.confirmCardPayment(client_secret, {
          payment_method: {
             card: elements.getElement(CardElement),
             billing_details: {
                name: currentUser ? currentUser.displayName : "Guest",
-            }
-         }
-      })
+            },
+         },
+      });
 
-      if(paymentResult.error){
+      setIsProcessingPayment(false);
+
+      if (paymentResult.error) {
          alert(paymentResult.error.message);
-         
       }
-      if(paymentResult.paymentIntent.status === "succeeded"){
+      if (paymentResult.paymentIntent.status === "succeeded") {
          alert("Payment ok");
       }
-
-      isProcessingPayment(false);
-   }
+   };
 
    return (
       <PaymentformContainer>
          <FormContainer onSubmit={paymentHandler}>
             <h2>Credit Card Payment:</h2>
             <CardElement></CardElement>
-            <CheckoutButton displayName={isProcessingPayment} buttonType={BUTTON_TYPE_CLASSES.inverted}>Pay now</CheckoutButton>
+            <PaymentButton
+               buttonType={
+                  isProcessingPayment
+                     ? BUTTON_TYPE_CLASSES.disabled
+                     : BUTTON_TYPE_CLASSES.inverted
+               }
+               isLoading={isProcessingPayment}
+            >
+               Pay now
+            </PaymentButton>
          </FormContainer>
       </PaymentformContainer>
    );
