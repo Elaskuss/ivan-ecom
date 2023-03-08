@@ -1,5 +1,5 @@
 import "./button.styles.jsx";
-import { ButtonContainer } from "./button.styles.jsx";
+import { ButtonContainer, ButtonSpinner } from "./button.styles.jsx";
 
 export const BUTTON_TYPE_CLASSES = {
    google: "google-sign-in",
@@ -13,7 +13,7 @@ const Button = ({ children, buttonType, isLoading, ...otherProps }) => {
          disabled={isLoading}
          {...otherProps}
       >
-         {children}
+      {isLoading ? <ButtonSpinner/> : children}
       </ButtonContainer>
    );
 };
