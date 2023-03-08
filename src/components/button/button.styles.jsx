@@ -44,3 +44,8 @@ export const ButtonContainer = styled.button`
      }
    
 `;
+
+Spinner
+
+export const ButtonSpinner = styled()
+
