@@ -5,25 +5,24 @@ import {
    RemoveButton,
 } from "./checkout.item.styles";
 import "./checkout.item.styles";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCartItems } from "../../store/cart/cart.selector";
-import { addItemToCart, decreaseItemFromCart, removeItemFromCart } from "../../store/cart/cart.action";
+import { useDispatch } from "react-redux";
+
+import { addItemToCart, decreaseItemFromCart, removeItemFromCart } from "../../store/cart/cart.reducer";
 
 const CheckoutItem = ({ checkoutItem }) => {
    const { name, quantity, price, imageUrl } = checkoutItem;
    const dispatch = useDispatch();
-   const cartItems = useSelector(selectCartItems);
 
    const decrease = () => {
-      dispatch(decreaseItemFromCart(cartItems, checkoutItem));
+      dispatch(decreaseItemFromCart(checkoutItem));
    };
 
    const increase = () => {
-      dispatch(addItemToCart(cartItems, checkoutItem));
+      dispatch(addItemToCart(checkoutItem));
    };
 
    const remove = () => {
-      dispatch(removeItemFromCart(cartItems, checkoutItem));
+      dispatch(removeItemFromCart(checkoutItem));
    };
 
    return (

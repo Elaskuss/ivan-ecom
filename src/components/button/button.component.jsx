@@ -1,18 +1,31 @@
 import "./button.styles.jsx";
-import { ButtonContainer } from "./button.styles.jsx";
+import {
+   BaseButton,
+   GoogleButton,
+   InvertedButton,
+   DisabledButton,
+   ButtonSpinner,
+} from "./button.styles.jsx";
 
-const BUTTON_TYPE_CLASSES = {
+export const BUTTON_TYPE_CLASSES = {
+   base: "base",
    google: "google-sign-in",
    inverted: "inverted",
+   disabled: "disabled",
 };
 
-const Button = ({ children, buttonType, ...otherProps }) => {
+const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) => ({
+   [BUTTON_TYPE_CLASSES.base]: BaseButton,
+   [BUTTON_TYPE_CLASSES.disabled]: DisabledButton,
+   [BUTTON_TYPE_CLASSES.inverted]: InvertedButton,
+   [BUTTON_TYPE_CLASSES.google]: GoogleButton,
+}[buttonType]);
+
+const Button = ({ children, buttonType, isLoading, ...otherProps }) => {
+   const ButtonContainer = getButton(buttonType);
    return (
-      <ButtonContainer
-         className={`button-container ${BUTTON_TYPE_CLASSES[buttonType]}`}
-         {...otherProps}
-      >
-         {children}
+      <ButtonContainer disabled={isLoading} {...otherProps}>
+         {isLoading ? <ButtonSpinner /> : children}
       </ButtonContainer>
    );
 };
