@@ -3,8 +3,7 @@ import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-
-const { configureStore } = require("@reduxjs/toolkit");
+import { configureStore } from "@reduxjs/toolkit"
 
 const middleWares = [process.env.NODE_ENV !== "production" && logger].filter(Boolean);
 
