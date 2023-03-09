@@ -9,28 +9,39 @@ import {
    createUserDocFromAuth,
    onAuthStateChangedListener,
 } from "./utils/firebase/firebase.utils";
-import { setCurrentUser } from "./store/user/user.reducer";
-import { useDispatch } from "react-redux";
-
-
+import { setCurrentUser, setCurrentUserAuth } from "./store/user/user.reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCartItems } from "./store/cart/cart.selector";
+import { selectCurrentUser, selectCurrentUserAuth } from "./store/user/user.selector";
+import { addCartItemsToUser } from "./store/cart/cart.reducer";
 
 function App() {
    const dispatch = useDispatch();
+   const cartItems = useSelector(selectCartItems);
+   const currentUserAuth = useSelector(selectCurrentUserAuth);
+   const currentUser = useSelector(selectCurrentUser);
 
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
          if (user) {
             createUserDocFromAuth(user);
          }
-
-         dispatch(setCurrentUser(user));
+         dispatch(setCurrentUserAuth(user));
       });
-
       return unsubscribe;
-      /* eslint-disable */
-      //Dispatch is not a dependency
-   }, []);
-      /* eslint-enable */
+   });
+
+   useEffect(() => {
+      dispatch(setCurrentUser(currentUserAuth));
+   }, [currentUserAuth]);
+
+   useEffect(() => {
+      if (currentUserAuth) {
+         const payload = { cartItems, currentUser }
+         dispatch(addCartItemsToUser(payload));
+      }
+   }, [cartItems]);
+
    return (
       <Routes>
          <Route path="/" element={<Nav />}>

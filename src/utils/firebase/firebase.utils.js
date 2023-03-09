@@ -45,6 +45,12 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
    await batch.commit();
 }
 
+export const addDocument = async (collectionKey, docKey, data) => {
+   const userDocRef = doc(db, collectionKey, docKey);
+   setDoc(userDocRef, data);
+}
+
+
 export const getCategoriesAndDocuments = async () => {
    const collectionRef = collection(db, "categories");
    const q = query(collectionRef);
@@ -78,8 +84,14 @@ export const createUserDocFromAuth = async (
       }
    }
 
-   return userDocRef;
+   return userSnapshot.data();
 };
+
+export const getUserDocFromAuth = async (userAuth) => {
+   const userDocRef = doc(db, "users", userAuth.uid);
+   const userSnapshot = await getDoc(userDocRef);
+   return userSnapshot.data();
+}
 
 export const createAuthUser = async (email, password) => {
    if (!email || !password) return;
