@@ -102,7 +102,14 @@ export const createAuthUser = async (email, password) => {
 export const signInUserWithEmailAndPassword = async (email, password) => {
    if (!email || !password) return;
 
-   return await signInWithEmailAndPassword(auth, email, password);
+   return await signInWithEmailAndPassword(auth, email, password).catch((error) =>{
+      switch(error.code){
+         case "auth/user-not-found":
+            return "The user was not found";
+         case "auth/wrong-password":
+            return "The email and password does not match";
+      }
+   });
 };
 
 export const signOutUser = async () => await signOut(auth);

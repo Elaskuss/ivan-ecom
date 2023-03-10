@@ -4,6 +4,7 @@ import Nav from "./routes/nav/nav.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
+import LoggedInMenu from "./routes/logged-in/logged-in.component";
 import { useEffect } from "react";
 import {
    createUserDocFromAuth,
@@ -23,15 +24,14 @@ function App() {
 
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
-         if (user) {
-            createUserDocFromAuth(user);
-         }
+         console.log("setCurrentUserAuth 1")
          dispatch(setCurrentUserAuth(user));
       });
       return unsubscribe;
    });
 
    useEffect(() => {
+      console.log("setCurrentUser 1")
       dispatch(setCurrentUser(currentUserAuth));
    }, [currentUserAuth]);
 
@@ -50,6 +50,7 @@ function App() {
                <Route path="hats" element={<Home />} />
             </Route>
             <Route path="sign-in" element={<Authentication />} />
+            <Route path="user" element={<LoggedInMenu />} />
             <Route path="checkout" element={<Checkout />} />
          </Route>
       </Routes>

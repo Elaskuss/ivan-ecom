@@ -5,7 +5,6 @@ import { createUserDocFromAuth, getUserDocFromAuth } from "../../utils/firebase/
 const INIT_STATE = {
    currentUserAuth: null,
    currentUser: null,
-   userCart: [],
    savedItems: [],
    loading: false
 }
@@ -13,8 +12,9 @@ const INIT_STATE = {
 export const setCurrentUser = createAsyncThunk(
    "user/setCurrentUser",
    async (userAuth) => {
-      if(userAuth){
+      if(userAuth){         
          const userDoc = await getUserDocFromAuth(userAuth);
+         console.log(userDoc);
          return userDoc;
       }
       else {
@@ -23,24 +23,39 @@ export const setCurrentUser = createAsyncThunk(
    }
 )
 
+export const setCurrentUserAuth = createAsyncThunk(
+   "user/setCurrentUserAuth",
+   async(userAuth) => {
+      if (userAuth) {
+         await createUserDocFromAuth(userAuth);
+         return userAuth;
+      }
+      else {
+         return null;
+      }
+   }
+)
+
 export const userSlice = createSlice({
    name: "users", 
    initialState: INIT_STATE,
    reducers: {
-      setCurrentUserAuth(state, action) {
-         state.currentUserAuth = action.payload
-      },
    },
    extraReducers: builder => {
       builder.addCase(setCurrentUser.pending, (state) => {
          state.loading = true;
       })
       builder.addCase(setCurrentUser.fulfilled, (state, action) => {
-         state.currentUser = action.payload
+         console.log(action);
+         state.currentUser = action.payload;
+         state.loading = false;
+      })
+      builder.addCase(setCurrentUserAuth.fulfilled, (state, action) => {
+         console.log(action);
+         state.currentUserAuth = action.payload
       })
    }
 })
 
-export const {setCurrentUserAuth} = userSlice.actions;
 
 export const userReducer =  userSlice.reducer;

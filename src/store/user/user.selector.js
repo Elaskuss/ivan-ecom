@@ -1,10 +1,19 @@
 import { createSelector } from "reselect";
 
-export const selectCurrentUserAuth = (state) => state.user.currentUserAuth;
 
-export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectCurrentUserObj = (state) => state.user
 
-export const selectCurrentUserCart = createSelector(
-   [selectCurrentUser],
-   (currentUser) => currentUser.userCart
+export const selectCurrentUserAuth = createSelector(
+   [selectCurrentUserObj],
+   (userSlice) => userSlice.currentUserAuth
+)
+
+export const selectCurrentUser = createSelector(
+   [selectCurrentUserObj],
+   (userSlice) => userSlice.currentUser
+)
+
+export const selectUserLoading = createSelector(
+   [selectCurrentUserObj],
+   (userSlice) => userSlice.loading
 )
