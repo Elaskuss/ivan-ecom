@@ -5,4 +5,5 @@ export const AuthenticationContainer = styled.div`
    display: flex;
    justify-content: space-between;
    margin: 10vh auto;
+   position: relative;
 `;

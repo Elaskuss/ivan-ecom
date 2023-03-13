@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addDocument } from "../../utils/firebase/firebase.utils";
 
 const removeCardItem = (cartItems, productToRemove) => {
    return cartItems.filter((item) => item.id !== productToRemove.id);
@@ -32,20 +33,28 @@ const decreaseCardItems = (cartItems, productToAdd) => {
    return;
 };
 
+export const addCartItemsToUser = createAsyncThunk(
+   "cart/addCardItemsToUser",
+   async (payload) => {
+      const {cartItems, currentUser} = payload;
+      const data = {...currentUser, cartItems};
+      return await addDocument("users", currentUser.uid, data);
+   }
+);
+
 const INIT_STATE = {
    isCartOpen: false,
    cartItems: [],
    totalPrice: 0,
    totalQuantity: 0,
+   loading: false,
+   error: null,
 };
 
 export const cartSlice = createSlice({
    name: "cart",
    initialState: INIT_STATE,
    reducers: {
-      setCartItems(state, action) {
-         state.cartItems = action.payload;
-      },
       setIsCartOpen(state, action) {
          state.isCartOpen = action.payload;
       },
@@ -58,11 +67,10 @@ export const cartSlice = createSlice({
       decreaseItemFromCart(state, action) {
          state.cartItems = decreaseCardItems(state.cartItems, action.payload);
       },
-   },
+   }
 });
 
 export const {
-   setCartItems,
    setIsCartOpen,
    addItemToCart,
    removeItemFromCart,

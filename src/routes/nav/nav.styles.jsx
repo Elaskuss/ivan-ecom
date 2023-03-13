@@ -18,21 +18,39 @@ export const NavLinks = styled.div`
 `;
 
 export const LogoContainer = styled(Link)`
-   height: 100%;
-   width: 70px;
-   padding: 25px;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+   font-size: 40px;
+   font-weight: 600;
+   text-align: center;
+   align-self: center;
+   letter-spacing: -2px;
+   transition-property: font-weight, letter-spacing, font-size;
+   transition-duration: 0.2s;
+
+   &:hover {
+      transition-property: font-weight, letter-spacing, font-size;
+      transition-duration: 0.2s;
+      font-size: 45px;
+      font-weight: 700;
+      letter-spacing: 0px;
+   }
 `;
 
 export const NavLink = styled(Link)`
-   padding: 10px 15px;
+   display: flex;
+   margin-left: 7px;
+   height: 45px;
+   width: 45px;
    cursor: pointer;
-   transition-property: font-size, font-weight;
-   transition-duration: 0.1s;
+   justify-content: center;
+   align-items: center;
+   transition-property: margin-bottom;
+   transition-duration: 0.2s;
 
    &:hover {
-      transition-property: font-size, font-weight;
-      transition-duration: 0.1s;
-      font-weight: 900;
-      font-size: 18px;
+      transition-property: margin-bottom;
+      transition-duration: 0.2s;
+      margin-bottom: 3px;
    }
 `;
