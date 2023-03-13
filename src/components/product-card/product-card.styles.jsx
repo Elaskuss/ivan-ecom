@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {ReactComponent as BookmarkSvg} from "../../assets/bookmark.svg"
 
 export const ProductCardContainer = styled.div`
    width: 100%;
@@ -25,7 +26,7 @@ export const ProductCardContainer = styled.div`
 
    &:hover {
       img {
-         opacity: 0.8;
+         opacity: 0.90;
       }
 
       button {
@@ -49,3 +50,31 @@ export const Name = styled.span`
 export const Price = styled.span`
    width: 10%;
 `;
+
+export const Bookmark = styled(BookmarkSvg)`
+   opacity: 1;
+   z-index: 3;
+   height: 40px; 
+   width: 40px;
+   position: absolute;
+   right: 0px;
+   stroke: black;
+   stroke-linejoin: round;
+   fill: white;
+
+   &:hover{
+      fill: lightgray;
+      cursor: pointer;
+      opacity: 0.8;
+   }
+
+   &.saved{
+      opacity: 1;
+      stroke: white;
+      fill:black;
+
+      &:hover {
+         fill: lightgray;
+      }
+   }
+`

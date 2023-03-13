@@ -45,6 +45,12 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
    await batch.commit();
 }
 
+export const addDocument = async (collectionKey, docKey, data) => {
+   const userDocRef = doc(db, collectionKey, docKey);
+   setDoc(userDocRef, data);
+}
+
+
 export const getCategoriesAndDocuments = async () => {
    const collectionRef = collection(db, "categories");
    const q = query(collectionRef);
@@ -70,6 +76,7 @@ export const createUserDocFromAuth = async (
          await setDoc(userDocRef, {
             displayName,
             email,
+            uid: userAuth.uid,
             createdAt,
             ...addtionalInformation,
          });
@@ -78,8 +85,14 @@ export const createUserDocFromAuth = async (
       }
    }
 
-   return userDocRef;
+   return userSnapshot.data();
 };
+
+export const getUserDocFromAuth = async (userAuth) => {
+   const userDocRef = doc(db, "users", userAuth.uid);
+   const userSnapshot = await getDoc(userDocRef);
+   return userSnapshot.data();
+}
 
 export const createAuthUser = async (email, password) => {
    if (!email || !password) return;
@@ -90,12 +103,19 @@ export const createAuthUser = async (email, password) => {
 export const signInUserWithEmailAndPassword = async (email, password) => {
    if (!email || !password) return;
 
-   return await signInWithEmailAndPassword(auth, email, password);
+   return await signInWithEmailAndPassword(auth, email, password).catch((error) =>{
+      switch(error.code){
+         case "auth/user-not-found":
+            return "The user was not found";
+         case "auth/wrong-password":
+            return "The email and password does not match";
+      }
+   });
 };
 
 export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) => {
    if(callback == null) return;
-   onAuthStateChanged(auth, callback);
+   return onAuthStateChanged(auth, callback);
 }

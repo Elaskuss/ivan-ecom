@@ -1,10 +1,22 @@
-import { SpinnerContainer, SpinnerOverlay } from "./spinner.styles";
+import {
+   SpinnerContainer,
+   SpinnerOverlayAbsolute,
+   SpinnerOverlayRelative,
+} from "./spinner.styles";
 
-const Spinner = () => {
+const Spinner = ({ absolute }) => {
    return (
-      <SpinnerOverlay>
-         <SpinnerContainer></SpinnerContainer>
-      </SpinnerOverlay>
+      <>
+         {absolute ? (
+            <SpinnerOverlayAbsolute>
+               <SpinnerContainer></SpinnerContainer>
+            </SpinnerOverlayAbsolute>
+         ) : (
+            <SpinnerOverlayRelative>
+               <SpinnerContainer></SpinnerContainer>
+            </SpinnerOverlayRelative>
+         )}
+      </>
    );
 };
 

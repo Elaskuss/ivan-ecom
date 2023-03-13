@@ -2,7 +2,7 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCartTotal } from "../../store/cart/cart.selector";
-import { selectCurrentUser } from "../../store/user/user.selector";
+import { selectCurrentUser, selectCurrentUserAuth } from "../../store/user/user.selector";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import {
    PaymentButton,
@@ -15,7 +15,7 @@ const Paymentform = () => {
    const elements = useElements();
 
    const amount = useSelector(selectCartTotal) * 100;
-   const currentUser = useSelector(selectCurrentUser);
+   const currentUser = useSelector(selectCurrentUserAuth);
    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
    const paymentHandler = async (e) => {

@@ -1,4 +1,7 @@
+import { useEffect } from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../store/user/user.selector";
 import {
    createAuthUser,
    createUserDocFromAuth,
@@ -15,6 +18,9 @@ const defaultFormFields = {
 };
 
 const SignUpForm = () => {
+   const [passwordNotMatching, setPasswordNotMatching] = useState(false);
+   const [passwordLabel, setPasswordLabel] = useState("Password");
+   const [confirmPasswordLabel, setConfirmPasswordLabel] = useState("Confirm Password");
    const [formFields, setFormFields] = useState(defaultFormFields);
    const { email, displayName, password, confirmPassword } = formFields;
 
@@ -27,10 +33,19 @@ const SignUpForm = () => {
       setFormFields(defaultFormFields);
    };
 
+   useEffect(() => {
+      setPasswordNotMatching(false);
+      setPasswordLabel("Password")
+      setConfirmPasswordLabel("Confirm Password");
+   }, [password, confirmPassword]);
+
    const handleSubmit = async (event) => {
       event.preventDefault();
 
       if (password !== confirmPassword) {
+         setPasswordNotMatching(true);
+         setPasswordLabel("Password - Does not match")
+         setConfirmPasswordLabel("Confirm Password - Does not match");
          return;
       }
 
@@ -66,16 +81,18 @@ const SignUpForm = () => {
                onChange={handleChange}
             />
             <FormInput
+               className={passwordNotMatching ? "bad" : ""}
                value={password}
-               label={"Password"}
+               label={passwordLabel}
                type="password"
                required
                name="password"
                onChange={handleChange}
             />
             <FormInput
+               className={passwordNotMatching ? "bad" : ""}
                value={confirmPassword}
-               label={"Confirm Password"}
+               label={confirmPasswordLabel}
                type="password"
                required
                name="confirmPassword"
