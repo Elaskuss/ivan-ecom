@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDocument, getUserDocFromAuth } from "../../utils/firebase/firebase.utils";
+import { addDocument } from "../../utils/firebase/firebase.utils";
 
 const removeCardItem = (cartItems, productToRemove) => {
    return cartItems.filter((item) => item.id !== productToRemove.id);
@@ -67,18 +67,6 @@ export const cartSlice = createSlice({
       decreaseItemFromCart(state, action) {
          state.cartItems = decreaseCardItems(state.cartItems, action.payload);
       },
-   },
-   extraReducers: builder => {
-      builder.addCase(addCartItemsToUser.pending, (state) => {
-         state.loading = true;
-      });
-      builder.addCase(addCartItemsToUser.fulfilled, (state) => {
-         state.loading = false;
-      });
-      builder.addCase(addCartItemsToUser.rejected, (state, action) => {
-         state.loading = false;
-         state.error = action.payload;
-      });
    }
 });
 

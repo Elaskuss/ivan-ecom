@@ -1,61 +1,98 @@
-import { async } from "@firebase/util";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUserDocFromAuth, getUserDocFromAuth } from "../../utils/firebase/firebase.utils";
+import {
+   addDocument,
+   createUserDocFromAuth,
+   getUserDocFromAuth,
+} from "../../utils/firebase/firebase.utils";
 
 const INIT_STATE = {
    currentUserAuth: null,
    currentUser: null,
    savedItems: [],
-   loading: false
-}
+   loading: false,
+};
+
+const addOrRemoveSavedItem = (savedItems, productToAdd) => {
+   const existingItem = savedItems.find((item) => item.id === productToAdd.id);
+   if (existingItem) {
+      return savedItems.filter((item) => item.id !== productToAdd.id);
+   } else {
+      return [...savedItems, { ...productToAdd }];
+   }
+};
 
 export const setCurrentUser = createAsyncThunk(
    "user/setCurrentUser",
    async (userAuth) => {
-      if(userAuth){         
-         const userDoc = await getUserDocFromAuth(userAuth);
-         console.log(userDoc);
+      if (userAuth) {
+         const userDoc = await getUserDocFromAuth(userAuth);     
          return userDoc;
-      }
-      else {
-         return null
+      } else {
+         return null;
       }
    }
-)
+);
 
 export const setCurrentUserAuth = createAsyncThunk(
    "user/setCurrentUserAuth",
-   async(userAuth) => {
+   async (userAuth) => {
       if (userAuth) {
          await createUserDocFromAuth(userAuth);
          return userAuth;
-      }
-      else {
+      } else {
          return null;
       }
+   }
+);
+
+export const addSavedItemsToUser = createAsyncThunk(
+   "user/addSavedItemsToUser",
+   async (payload) => {
+      const { currentUser, savedItems } = payload;
+      const data = { ...currentUser, savedItems};
+      addDocument("users", currentUser.uid, data);
+   }
+);
+
+export const setCurrentUserSavedItems = createAsyncThunk(
+   "user/setCurrentUserSavedItems", 
+   async(userAuth) => {
+      const userDoc = await getUserDocFromAuth(userAuth);
+      return userDoc.savedItems;
    }
 )
 
 export const userSlice = createSlice({
-   name: "users", 
+   name: "users",
    initialState: INIT_STATE,
    reducers: {
+      addOrRemoveItemToSavedItems(state, action) {
+         state.savedItems = addOrRemoveSavedItem(
+            state.savedItems,
+            action.payload
+         );
+      },
    },
-   extraReducers: builder => {
+   extraReducers: (builder) => {
       builder.addCase(setCurrentUser.pending, (state) => {
          state.loading = true;
-      })
+      });
       builder.addCase(setCurrentUser.fulfilled, (state, action) => {
-         console.log(action);
          state.currentUser = action.payload;
          state.loading = false;
+      });
+      builder.addCase(setCurrentUserAuth.pending, state => {
+         return state;
       })
       builder.addCase(setCurrentUserAuth.fulfilled, (state, action) => {
-         console.log(action);
-         state.currentUserAuth = action.payload
-      })
-   }
-})
+         state.currentUserAuth = action.payload;
+      });
+      builder.addCase(setCurrentUserSavedItems.fulfilled, (state, action) => {
+         state.savedItems = action.payload;
+      });
+   },
+});
 
+export const { addOrRemoveItemToSavedItems } = userSlice.actions;
 
-export const userReducer =  userSlice.reducer;
+export const userReducer = userSlice.reducer;

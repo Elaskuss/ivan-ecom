@@ -6,41 +6,42 @@ import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import LoggedInMenu from "./routes/logged-in/logged-in.component";
 import { useEffect } from "react";
+import { onAuthStateChangedListener } from "./utils/firebase/firebase.utils";
 import {
-   createUserDocFromAuth,
-   onAuthStateChangedListener,
-} from "./utils/firebase/firebase.utils";
-import { setCurrentUser, setCurrentUserAuth } from "./store/user/user.reducer";
+   addSavedItemsToUser,
+   setCurrentUser,
+   setCurrentUserAuth,
+} from "./store/user/user.reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCartItems } from "./store/cart/cart.selector";
-import { selectCurrentUser, selectCurrentUserAuth } from "./store/user/user.selector";
-import { addCartItemsToUser } from "./store/cart/cart.reducer";
+import {
+   selectCurrentUser,
+   selectCurrentUserAuth,
+   selectSavedItems,
+} from "./store/user/user.selector";
+import SavedItems from "./routes/saved-items/saved-items.component";
 
 function App() {
    const dispatch = useDispatch();
-   const cartItems = useSelector(selectCartItems);
-   const currentUserAuth = useSelector(selectCurrentUserAuth);
    const currentUser = useSelector(selectCurrentUser);
+   const savedItems = useSelector(selectSavedItems);
+
+   const currentUserAuth = useSelector(selectCurrentUserAuth);
 
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
-         console.log("setCurrentUserAuth 1")
-         dispatch(setCurrentUserAuth(user));
+         dispatch(setCurrentUserAuth(user))
       });
+
       return unsubscribe;
    });
 
    useEffect(() => {
-      console.log("setCurrentUser 1")
-      dispatch(setCurrentUser(currentUserAuth));
+      dispatch(setCurrentUser(currentUserAuth))
    }, [currentUserAuth]);
 
    useEffect(() => {
-      if (currentUserAuth) {
-         const payload = { cartItems, currentUser }
-         dispatch(addCartItemsToUser(payload));
-      }
-   }, [cartItems]);
+      dispatch(addSavedItemsToUser({currentUser, savedItems}))
+   }, [savedItems]);
 
    return (
       <Routes>
@@ -52,6 +53,7 @@ function App() {
             <Route path="sign-in" element={<Authentication />} />
             <Route path="user" element={<LoggedInMenu />} />
             <Route path="checkout" element={<Checkout />} />
+            <Route path="saved-items" element={<SavedItems/>}></Route>
          </Route>
       </Routes>
    );
