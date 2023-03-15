@@ -36,7 +36,7 @@ function App() {
       });
 
       return unsubscribe;
-   }, );
+   }, []);
 
    useEffect(() => {
       dispatch(addSavedItemsToUser({currentUser, savedItems}))
