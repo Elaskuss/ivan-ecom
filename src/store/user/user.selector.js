@@ -13,6 +13,11 @@ export const selectCurrentUser = createSelector(
    (userSlice) => userSlice.currentUser
 )
 
+export const selectCurrentUserShippingAdress = createSelector(
+   [selectCurrentUser],
+   (currentUserSlice) => currentUserSlice.shippingAdress
+)
+
 export const selectUserLoading = createSelector(
    [selectCurrentUserObj],
    (userSlice) => userSlice.loading

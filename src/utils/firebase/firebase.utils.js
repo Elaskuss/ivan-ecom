@@ -7,8 +7,12 @@ import {
    signInWithEmailAndPassword,
    signOut,
    onAuthStateChanged,
+   reauthenticateWithCredential,
+   EmailAuthProvider,
+   updatePassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from "firebase/firestore";
+import { useState } from "react";
 
 const firebaseConfig = {
    apiKey: "AIzaSyDJgDmALPgxUrv7zgmevCpJy52dHoqEtRI",
@@ -71,13 +75,14 @@ export const createUserDocFromAuth = async (
    if (!userSnapshot.exists()) {
       const { displayName, email } = userAuth;
       const createdAt = new Date();
-
+      console.log(addtionalInformation);
       try {
          await setDoc(userDocRef, {
             displayName,
             email,
             uid: userAuth.uid,
             createdAt,
+            shippingAdress: {},
             ...addtionalInformation,
          });
       } catch (error) {
@@ -103,19 +108,51 @@ export const createAuthUser = async (email, password) => {
 export const signInUserWithEmailAndPassword = async (email, password) => {
    if (!email || !password) return;
 
-   return await signInWithEmailAndPassword(auth, email, password).catch((error) =>{
+   return await signInWithEmailAndPassword(auth, email, password).then(() => {
+      return true;
+   }).catch((error) => {
       switch(error.code){
          case "auth/user-not-found":
             return "The user was not found";
          case "auth/wrong-password":
             return "The email and password does not match";
+         default:
+            return "loggedIn";
       }
    });
 };
+
+export const reAuthUser = async (userAuth, email, password) => {
+   let credential;
+
+   if(userAuth.providerData[0].providerId === "password"){
+      credential = EmailAuthProvider.credential(email, password);
+   }
+
+   return await reauthenticateWithCredential(userAuth, credential).then(() => {
+      return true;
+    }).catch((error) => {
+      switch(error.code){
+         case "auth/wrong-password":
+            return "This password does not match your current password";
+      }
+    });
+
+}
+
+export const updateCurrentUserPassword = async (userAuth, newPassword) => {
+   return updatePassword(userAuth, newPassword).then(() => {
+      return true;
+   }).catch((error) => {
+      return error.code;
+   })
+}
 
 export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) => {
    if(callback == null) return;
    return onAuthStateChanged(auth, callback);
+
+   
 }

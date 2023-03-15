@@ -12,9 +12,9 @@ const SavedItemsPreview = ({ products }) => {
    return (
       <SavedItemsPreviewContainer>
          <h2>
-            <Title to={"/saved-items"}>My saved items</Title>
+            <Title to={"/saved-items"}>My saved items:</Title>
          </h2>
-         <Preview>
+         {length ? (<Preview>
             {products.map((product) => {
                if (products.indexOf(product) < 4) {
                   return <ProductCard key={product.id} product={product} />;
@@ -22,7 +22,8 @@ const SavedItemsPreview = ({ products }) => {
 
                return <></>;
             })}
-         </Preview>
+         </Preview>) : <h3>You don't have any saved items yet!</h3>}
+         
          {length > 4 && (
             <Link to={"/saved-items"}>
                <SavedItemsPreviewButton>See all</SavedItemsPreviewButton>

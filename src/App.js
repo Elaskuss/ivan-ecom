@@ -28,14 +28,18 @@ function App() {
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
          dispatch(setCurrentUserAuth(user))
+         .unwrap()
+         .then(user => {
+            dispatch(setCurrentUser(user));
+         });
       });
 
       return unsubscribe;
-   });
+   }, );
 
-   useEffect(() => {
-      dispatch(setCurrentUser(currentUserAuth))
-   }, [currentUserAuth]);
+   // useEffect(() => {
+   //    dispatch(setCurrentUser(currentUserAuth))
+   // }, [currentUserAuth]);
 
    return (
       <Routes>
