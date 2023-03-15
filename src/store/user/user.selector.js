@@ -23,7 +23,9 @@ export const selectUserLoading = createSelector(
    (userSlice) => userSlice.loading
 )
 
+const defaultValue = () => "default";
+
 export const selectSavedItems = createSelector(
    [selectCurrentUser],
-   (userSlice) => userSlice.savedItems
+   (userSlice) => (userSlice !== null ? userSlice.savedItems : defaultValue())
 )

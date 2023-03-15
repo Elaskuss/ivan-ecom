@@ -10,17 +10,9 @@ import Category from "../category/category.component";
 const Shop = () => {
    const dispatch = useDispatch();
    
-   const currentUser = useSelector(selectCurrentUser);
-   const savedItems = useSelector(selectSavedItems);
-
    useEffect(() => {
       dispatch(fetchCategories());
    }, [dispatch]);
-
-   useEffect(() => {
-      dispatch(addSavedItemsToUser({currentUser, savedItems}))
-   }, [savedItems]);
-
 
    return (
       <Routes>

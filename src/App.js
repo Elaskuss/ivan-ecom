@@ -23,7 +23,10 @@ import SavedItems from "./routes/saved-items/saved-items.component";
 function App() {
    const dispatch = useDispatch();
 
-   const currentUserAuth = useSelector(selectCurrentUserAuth);
+   const currentUser = useSelector(selectCurrentUser);
+   const savedItems = useSelector(selectSavedItems);
+
+   console.log(savedItems);
 
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
@@ -37,9 +40,9 @@ function App() {
       return unsubscribe;
    }, );
 
-   // useEffect(() => {
-   //    dispatch(setCurrentUser(currentUserAuth))
-   // }, [currentUserAuth]);
+   useEffect(() => {
+      dispatch(addSavedItemsToUser({currentUser, savedItems}))
+   }, [savedItems]);
 
    return (
       <Routes>
