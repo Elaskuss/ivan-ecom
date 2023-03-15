@@ -22,8 +22,6 @@ import SavedItems from "./routes/saved-items/saved-items.component";
 
 function App() {
    const dispatch = useDispatch();
-   const currentUser = useSelector(selectCurrentUser);
-   const savedItems = useSelector(selectSavedItems);
 
    const currentUserAuth = useSelector(selectCurrentUserAuth);
 
@@ -38,10 +36,6 @@ function App() {
    useEffect(() => {
       dispatch(setCurrentUser(currentUserAuth))
    }, [currentUserAuth]);
-
-   useEffect(() => {
-      dispatch(addSavedItemsToUser({currentUser, savedItems}))
-   }, [savedItems]);
 
    return (
       <Routes>
