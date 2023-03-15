@@ -75,7 +75,6 @@ export const createUserDocFromAuth = async (
    if (!userSnapshot.exists()) {
       const { displayName, email } = userAuth;
       const createdAt = new Date();
-      console.log(addtionalInformation);
       try {
          await setDoc(userDocRef, {
             displayName,
@@ -148,7 +147,11 @@ export const updateCurrentUserPassword = async (userAuth, newPassword) => {
    })
 }
 
-export const signOutUser = async () => await signOut(auth);
+export const signOutUser = async () => {
+   return await signOut(auth).catch((error) => {
+      return error.code;
+   })
+};
 
 export const onAuthStateChangedListener = (callback) => {
    if(callback == null) return;

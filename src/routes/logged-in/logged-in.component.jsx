@@ -13,18 +13,14 @@ import { signOutUser } from "../../utils/firebase/firebase.utils";
 import { LoggedInContainer } from "./logged-in.styles";
 
 const LoggedInMenu = () => {
-   const navigate = useNavigate();
 
    const signOutUserHandler = async () => {
-      await signOutUser();
-      navigate("/");
+      const wtf = await signOutUser();
    };
 
    const user = useSelector(selectCurrentUser);
-   console.log(user);
   
    const savedItems = useSelector(selectSavedItems);
-   console.log(savedItems);
    return (
       <LoggedInContainer>
          {user ? (

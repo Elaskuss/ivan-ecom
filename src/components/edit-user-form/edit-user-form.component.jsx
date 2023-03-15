@@ -35,10 +35,10 @@ const EditUserForm = () => {
    const defaultFormFields = {
       firstName: CurrentUserShipping.firstName
          ? CurrentUserShipping.firstName
-         : currentUserAuth.displayName.split(" ")[0], 
+         : currentUserAuth?.displayName.split(" ")[0], 
       lastName: CurrentUserShipping.lastName
          ? CurrentUserShipping.lastName
-         : currentUserAuth.displayName.split(" ")[1], 
+         : currentUserAuth?.displayName.split(" ")[1], 
       adress: CurrentUserShipping.adress ? CurrentUserShipping.adress : "",
       city: CurrentUserShipping.city ? CurrentUserShipping.city : "",
       zipcode: CurrentUserShipping.zipcode ? CurrentUserShipping.zipcode : "",
@@ -64,7 +64,7 @@ const EditUserForm = () => {
 
    useEffect(() => {
       if(currentUserAuth != null){
-         currentUserAuth.providerData[0].providerId === "password" ? setShowPasswordChange(true) : setShowPasswordChange(false);
+         currentUserAuth?.providerData[0].providerId === "password" ? setShowPasswordChange(true) : setShowPasswordChange(false);
       }
    }, [currentUserAuth]);
 
@@ -128,9 +128,7 @@ const EditUserForm = () => {
       }
       else {
          const passwordUpdated = await updateCurrentUserPassword(currentUserAuth, newPassword);
-         console.log(passwordUpdated);
          if(passwordUpdated !== true){
-            console.log(passwordUpdated)
          }
          else{
             alert("Password changed");

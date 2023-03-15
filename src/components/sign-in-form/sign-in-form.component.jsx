@@ -40,6 +40,7 @@ const SignInForm = () => {
    };
 
    const signInViaGoogle = async () => {
+      console.log("signInViaGoogle");
       await signInWithGooglePopup();
    };
 

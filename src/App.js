@@ -9,6 +9,9 @@ import { useEffect } from "react";
 import { onAuthStateChangedListener } from "./utils/firebase/firebase.utils";
 import {
    addSavedItemsToUser,
+   clearOnLogOut,
+   clearUserInformationOnLogOut,
+   resetUserSlice,
    setCurrentUser,
    setCurrentUserAuth,
 } from "./store/user/user.reducer";
@@ -19,6 +22,7 @@ import {
    selectSavedItems,
 } from "./store/user/user.selector";
 import SavedItems from "./routes/saved-items/saved-items.component";
+import ProtectedRoute from "./components/protected-route/protected-route.component";
 
 function App() {
    const dispatch = useDispatch();
@@ -29,17 +33,22 @@ function App() {
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
          dispatch(setCurrentUserAuth(user))
-         .unwrap()
-         .then(user => {
-            dispatch(setCurrentUser(user));
-         });
+            .unwrap()
+            .then((user) => {
+               dispatch(setCurrentUser(user));
+               if(!user){
+                  dispatch(resetUserSlice());
+               }
+            });
       });
 
       return unsubscribe;
    }, []);
 
    useEffect(() => {
-      dispatch(addSavedItemsToUser({currentUser, savedItems}))
+      if (currentUser) {
+         dispatch(addSavedItemsToUser({ currentUser, savedItems }));
+      }
    }, [savedItems]);
 
    return (
@@ -50,9 +59,18 @@ function App() {
                <Route path="hats" element={<Home />} />
             </Route>
             <Route path="sign-in" element={<Authentication />} />
-            <Route path="user" element={<LoggedInMenu />} />
+
+            <Route
+               path="user"
+               element={
+                  <ProtectedRoute>
+                     <LoggedInMenu />
+                  </ProtectedRoute>
+               }
+            />
+
             <Route path="checkout" element={<Checkout />} />
-            <Route path="saved-items" element={<SavedItems/>}></Route>
+            <Route path="saved-items" element={<SavedItems />}></Route>
          </Route>
       </Routes>
    );

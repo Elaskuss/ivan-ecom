@@ -6,7 +6,6 @@ const removeCardItem = (cartItems, productToRemove) => {
 };
 
 const addCardItems = (cartItems, productToAdd) => {
-   console.log(productToAdd);
    const existingItem = cartItems.find((item) => item.id === productToAdd.id);
    if (existingItem) {
       return cartItems.map((cartItem) =>

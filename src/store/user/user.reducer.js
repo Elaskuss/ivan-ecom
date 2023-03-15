@@ -38,6 +38,7 @@ export const setCurrentUserAuth = createAsyncThunk(
    async (userAuth) => {
       if (userAuth) {
          await createUserDocFromAuth(userAuth);
+         console.log("This is the user auth:", userAuth);
          return userAuth;
       } else {
          return null;
@@ -51,6 +52,7 @@ export const addSavedItemsToUser = createAsyncThunk(
       const { currentUser, savedItems } = payload;
       const data = { ...currentUser, savedItems};
       addDocument("users", currentUser.uid, data);
+      return savedItems;
    }
 );
 
@@ -59,7 +61,6 @@ export const updateCurrentUser = createAsyncThunk(
    async (payload) => {
       const { currentUser, changes } = payload;
       const data = { ...currentUser, ...changes};
-      console.log(data);
       addDocument("users", currentUser.uid, data);
       return data
    }
@@ -84,13 +85,15 @@ export const userSlice = createSlice({
             action.payload
          );
       },
+      resetUserSlice: (state) => INIT_STATE,
    },
    extraReducers: (builder) => {
       builder.addCase(setCurrentUser.pending, (state) => {
          state.loading = true;
-      });
+      })
       builder.addCase(setCurrentUser.fulfilled, (state, action) => {
          state.currentUser = action.payload;
+         state.savedItems = action.payload.savedItems;
          state.loading = false;
       });
       builder.addCase(setCurrentUserAuth.pending, state => {
@@ -108,6 +111,6 @@ export const userSlice = createSlice({
    },
 });
 
-export const { addOrRemoveItemToSavedItems } = userSlice.actions;
+export const { addOrRemoveItemToSavedItems, resetUserSlice } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
