@@ -26,8 +26,6 @@ function App() {
    const currentUser = useSelector(selectCurrentUser);
    const savedItems = useSelector(selectSavedItems);
 
-   console.log(savedItems);
-
    useEffect(() => {
       const unsubscribe = onAuthStateChangedListener((user) => {
          dispatch(setCurrentUserAuth(user))
