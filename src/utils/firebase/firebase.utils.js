@@ -82,6 +82,7 @@ export const createUserDocFromAuth = async (
             uid: userAuth.uid,
             createdAt,
             shippingAdress: {},
+            savedItems: [],
             ...addtionalInformation,
          });
       } catch (error) {
