@@ -54,6 +54,18 @@ export const addSavedItemsToUser = createAsyncThunk(
    }
 );
 
+export const updateCurrentUser = createAsyncThunk(
+   "user/updateCurrentUser",
+   async (payload) => {
+      const { currentUser, changes } = payload;
+      const data = { ...currentUser, ...changes};
+      console.log(data);
+      addDocument("users", currentUser.uid, data);
+      return data
+   }
+);
+
+
 export const setCurrentUserSavedItems = createAsyncThunk(
    "user/setCurrentUserSavedItems", 
    async(userAuth) => {
@@ -90,6 +102,9 @@ export const userSlice = createSlice({
       builder.addCase(setCurrentUserSavedItems.fulfilled, (state, action) => {
          state.savedItems = action.payload;
       });
+      builder.addCase(updateCurrentUser.fulfilled, (state, action) => {
+         state.currentUser = action.payload
+      }) 
    },
 });
 

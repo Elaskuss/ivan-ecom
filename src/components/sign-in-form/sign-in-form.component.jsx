@@ -7,9 +7,10 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import { ButtonContainer, SignInContainer } from "./sing-in-form.styles";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignInForm = () => {
-
+   const navigate = useNavigate();
 
    const defaultFormFields = {
       email: "",
@@ -27,13 +28,15 @@ const SignInForm = () => {
    };
 
    const handleSubmit = async (event) => {
+
       event.preventDefault();
       const signInPromise = await signInUserWithEmailAndPassword(email, password);
-      if(signInPromise){
+      if(signInPromise !== true){
          setUserNotFound(true);
          setErrorLabel(signInPromise);
       }
 
+      
    };
 
    const signInViaGoogle = async () => {
@@ -50,14 +53,14 @@ const SignInForm = () => {
          <span>Sign in with your email or Google</span>
          <form onSubmit={handleSubmit}>
             <FormInput
-               className={userNotFound ? "bad" : ""}
                value={email}
                label={"Email"}
                type="email"
                required
                name="email"
                onChange={handleChange}
-               userNotFound={userNotFound}
+               error={userNotFound}
+               className={userNotFound ? "bad" : ""}
                errorLabel={errorLabel}
             />
             

@@ -8,10 +8,11 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
-import { SignUpContainer } from "./sign-up-form.styles.jsx";
+import { GroupedInput, SignUpContainer } from "./sign-up-form.styles.jsx";
 
 const defaultFormFields = {
-   displayName: "",
+   firstName: "",
+   lastName: "",
    email: "",
    password: "",
    confirmPassword: "",
@@ -20,13 +21,14 @@ const defaultFormFields = {
 const SignUpForm = () => {
    const [passwordNotMatching, setPasswordNotMatching] = useState(false);
    const [passwordLabel, setPasswordLabel] = useState("Password");
-   const [confirmPasswordLabel, setConfirmPasswordLabel] = useState("Confirm Password");
+   const [confirmPasswordLabel, setConfirmPasswordLabel] =
+      useState("Confirm Password");
    const [formFields, setFormFields] = useState(defaultFormFields);
-   const { email, displayName, password, confirmPassword } = formFields;
+   const { email, firstName, lastName, password, confirmPassword } = formFields;
 
-   const handleChange = async (event) => {
+   const handleChange = (event) => {
       const { name, value } = event.target;
-      await setFormFields({ ...formFields, [name]: value });
+      setFormFields({ ...formFields, [name]: value });
    };
 
    const resetFormFields = () => {
@@ -35,7 +37,7 @@ const SignUpForm = () => {
 
    useEffect(() => {
       setPasswordNotMatching(false);
-      setPasswordLabel("Password")
+      setPasswordLabel("Password");
       setConfirmPasswordLabel("Confirm Password");
    }, [password, confirmPassword]);
 
@@ -44,15 +46,20 @@ const SignUpForm = () => {
 
       if (password !== confirmPassword) {
          setPasswordNotMatching(true);
-         setPasswordLabel("Password - Does not match")
+         setPasswordLabel("Password - Does not match");
          setConfirmPasswordLabel("Confirm Password - Does not match");
          return;
       }
 
       const { user } = await createAuthUser(email, password);
-
       try {
-         await createUserDocFromAuth(user, { displayName: displayName });
+         await createUserDocFromAuth(user, {
+            displayName: firstName + " " + lastName,
+            shippingAdress: {
+               firstName: firstName,
+               lastName: lastName,
+            }
+         });
          resetFormFields();
       } catch (error) {
          console.log("Something went wrong", error);
@@ -64,14 +71,24 @@ const SignUpForm = () => {
          <h2>Dont have and account?</h2>
          <span>Sign up with your Email and Password</span>
          <form onSubmit={handleSubmit}>
-            <FormInput
-               value={displayName}
-               label={"Display Name"}
-               type="text"
-               required
-               name="displayName"
-               onChange={handleChange}
-            />
+            <GroupedInput>
+               <FormInput
+                  value={firstName}
+                  label={"First name"}
+                  type="text"
+                  required
+                  name="firstName"
+                  onChange={handleChange}
+               />
+               <FormInput
+                  value={lastName}
+                  label={"Last name"}
+                  type="text"
+                  required
+                  name="lastName"
+                  onChange={handleChange}
+               />
+            </GroupedInput>
             <FormInput
                value={email}
                label={"Email"}

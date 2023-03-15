@@ -1,8 +1,9 @@
 import { Input, FormInputLabel, Group } from "./form-input.styles.jsx";
 
-const FormInput = ({ label, userNotFound, errorLabel, ...otherProps }) => {
+const FormInput = ({ label, error, errorLabel, ...otherProps }) => {
+   console.log(error);
    return (
-      <Group>
+      <Group {...otherProps}>
          {label && (
             <FormInputLabel {...otherProps} shrink={otherProps.value.length}>
                {label}
@@ -10,7 +11,7 @@ const FormInput = ({ label, userNotFound, errorLabel, ...otherProps }) => {
          )}
 
          <Input {...otherProps} />
-         {userNotFound && <p>{errorLabel}</p>}
+         {error && <p>{errorLabel}</p>}
       </Group>
    );
 };
