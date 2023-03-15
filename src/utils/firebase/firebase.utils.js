@@ -12,7 +12,6 @@ import {
    updatePassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from "firebase/firestore";
-import { useState } from "react";
 
 const firebaseConfig = {
    apiKey: "AIzaSyDJgDmALPgxUrv7zgmevCpJy52dHoqEtRI",

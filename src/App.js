@@ -9,8 +9,6 @@ import { useEffect } from "react";
 import { onAuthStateChangedListener } from "./utils/firebase/firebase.utils";
 import {
    addSavedItemsToUser,
-   clearOnLogOut,
-   clearUserInformationOnLogOut,
    resetUserSlice,
    setCurrentUser,
    setCurrentUserAuth,

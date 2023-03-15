@@ -38,7 +38,6 @@ export const setCurrentUserAuth = createAsyncThunk(
    async (userAuth) => {
       if (userAuth) {
          await createUserDocFromAuth(userAuth);
-         console.log("This is the user auth:", userAuth);
          return userAuth;
       } else {
          return null;
