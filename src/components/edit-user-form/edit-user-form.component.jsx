@@ -89,6 +89,7 @@ const EditUserForm = () => {
    const handleSubmitShipping = (event) => {
       event.preventDefault();
       const changes = {
+         displayName: firstName + " " + lastName,
          shippingAdress: {
             firstName,
             lastName,
