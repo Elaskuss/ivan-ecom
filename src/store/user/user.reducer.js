@@ -92,7 +92,9 @@ export const userSlice = createSlice({
       })
       builder.addCase(setCurrentUser.fulfilled, (state, action) => {
          state.currentUser = action.payload;
-         state.savedItems = action.payload.savedItems;
+         if(!state.currentUser){
+            state.savedItems = action.payload.savedItems;
+         }
          state.loading = false;
       });
       builder.addCase(setCurrentUserAuth.pending, state => {
