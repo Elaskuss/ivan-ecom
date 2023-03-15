@@ -21,7 +21,10 @@ const LoggedInMenu = () => {
    };
 
    const user = useSelector(selectCurrentUser);
+   console.log(user);
+  
    const savedItems = useSelector(selectSavedItems);
+   console.log(savedItems);
    return (
       <LoggedInContainer>
          {user ? (

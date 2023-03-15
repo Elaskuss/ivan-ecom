@@ -24,6 +24,6 @@ export const selectUserLoading = createSelector(
 )
 
 export const selectSavedItems = createSelector(
-   [selectCurrentUserObj],
+   [selectCurrentUser],
    (userSlice) => userSlice.savedItems
 )
