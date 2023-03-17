@@ -8,7 +8,8 @@ const CartItem = ({ cartItem }) => {
    const dispatch = useDispatch();
    const { name, quantity, imageUrl, price } = cartItem;
 
-   const decrease = () => {
+   const decrease = (event) => {
+      event.stopPropagation();
       dispatch(decreaseItemFromCart(cartItem));
    };
 
@@ -16,7 +17,8 @@ const CartItem = ({ cartItem }) => {
       dispatch(addItemToCart(cartItem));
    };
 
-   const remove = () => {
+   const remove = (event) => {
+      event.stopPropagation();
       dispatch(removeItemFromCart(cartItem));
    };
 

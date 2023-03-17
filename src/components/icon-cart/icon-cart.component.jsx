@@ -9,7 +9,8 @@ const CartIcon = () => {
    const totalQuantity = useSelector(selectCartCount);
    const dispatch = useDispatch();
    
-   const toggleIsCartOpen = () => {
+   const toggleIsCartOpen = (event) => {
+      event.stopPropagation()
       dispatch(setIsCartOpen(!isCartOpen))
    };
 

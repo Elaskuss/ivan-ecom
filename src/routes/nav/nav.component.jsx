@@ -5,8 +5,6 @@ import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component
 import CartIcon from "../../components/icon-cart/icon-cart.component";
 import { selectCurrentUserAuth } from "../../store/user/user.selector";
 import { selectIsCartOpen } from "../../store/cart/cart.selector";
-
-import { signOutUser } from "../../utils/firebase/firebase.utils";
 import {
    NavigationContainer,
    LogoContainer,
@@ -19,7 +17,6 @@ const Nav = () => {
 
    const currentUser = useSelector(selectCurrentUserAuth);
    const isCartOpen = useSelector(selectIsCartOpen);
-
    return (
       <Fragment>
          <NavigationContainer>
@@ -39,7 +36,7 @@ const Nav = () => {
                )}
                <CartIcon />
             </NavLinks>
-            {isCartOpen && <CartDropdown />}
+            {isCartOpen && <CartDropdown/>}
          </NavigationContainer>
          <Outlet />
       </Fragment>

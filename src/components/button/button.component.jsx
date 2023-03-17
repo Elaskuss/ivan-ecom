@@ -21,10 +21,21 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) => ({
    [BUTTON_TYPE_CLASSES.google]: GoogleButton,
 }[buttonType]);
 
-const Button = ({ children, buttonType, isLoading, ...otherProps }) => {
+const Button = ({onClick, children, buttonType, isLoading, stopPropagation = false, ...otherProps }) => {
+
+   const handleClick = (event) => {
+      if(stopPropagation){
+        
+         event.stopPropagation();
+      }
+      if(event){
+         onClick(event);
+      }
+   }
+
    const ButtonContainer = getButton(buttonType);
    return (
-      <ButtonContainer disabled={isLoading} {...otherProps}>
+      <ButtonContainer onClick={handleClick} disabled={isLoading} {...otherProps}>
          {isLoading ? <ButtonSpinner /> : children}
       </ButtonContainer>
    );
