@@ -20,11 +20,11 @@ const addCardItems = (cartItems, productToAdd) => {
 const decreaseCardItems = (cartItems, productToAdd) => {
    const existingItem = cartItems.find((item) => item.id === productToAdd.id);
    if (existingItem.quantity > 1) {
-      return cartItems.map((cartItem) =>
-         cartItem.id === productToAdd.id
+      return cartItems.map((cartItem) => {
+         return cartItem.id === productToAdd.id
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
-            : cartItem
-      );
+            : cartItem;
+      });
    } else if (existingItem.quantity === 1) {
       return cartItems.filter((item) => item.id !== productToAdd.id);
    }
@@ -35,8 +35,8 @@ const decreaseCardItems = (cartItems, productToAdd) => {
 export const addCartItemsToUser = createAsyncThunk(
    "cart/addCardItemsToUser",
    async (payload) => {
-      const {cartItems, currentUser} = payload;
-      const data = {...currentUser, cartItems};
+      const { cartItems, currentUser } = payload;
+      const data = { ...currentUser, cartItems };
       return await addDocument("users", currentUser.uid, data);
    }
 );
@@ -66,7 +66,7 @@ export const cartSlice = createSlice({
       decreaseItemFromCart(state, action) {
          state.cartItems = decreaseCardItems(state.cartItems, action.payload);
       },
-   }
+   },
 });
 
 export const {
